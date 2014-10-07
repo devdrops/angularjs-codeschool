@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html ng-app="store">
+    <head>
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+    </head>
+    <style type="text/css">
+        section{background-color:#fff;padding:3px;}
+    </style>
+    <body>
+        <div ng-controller="StoreController as store">
+            <div ng-repeat="product in store.products | orderBy:'-price'">
+                <div class="well well-sm" ng-hide="product.soldOut">                    
+                    <h1>{{product.name | uppercase}}</h1>
+                    <h2>{{product.price | currency}}</h2>                    
+                    <p>
+                        <img ng-src="{{product.images[0].full}}" />
+                    </p>
+                    <button ng-show="product.canPurchase">Add to cart</button>
+                    <hr/>
+                    <section ng-controller="PanelController as panel">
+                        <ul class="nav nav-pills">
+                            <li ng-class="{ active:panel.isSelected(1) }">
+                                <a href="" ng-click="panel.selectTab(1)">Description</a>
+                            </li>
+                            <li ng-class="{ active:panel.isSelected(2)}">
+                                <a href="" ng-click="panel.selectTab(2)">Specifications</a>
+                            </li>
+                            <li ng-class="{ active:panel.isSelected(3) }">
+                                <a href="" ng-click="panel.selectTab(3)">Reviews</a>
+                            </li>
+                        </ul>
+                        <div class="panel" ng-show="panel.isSelected(1)">
+                            <h4>Description</h4>
+                            <p>
+                                {{product.description}}
+                            </p>
+                        </div>
+                        <div class="panel" ng-show="panel.isSelected(2)">
+                            <h4>Specifications</h4>
+                            <blockquote>Nothing to see here, move along...</blockquote>
+                        </div>
+                        <div class="panel" ng-show="panel.isSelected(3)">
+                            <h4>Reviews</h4>
+                            <blockquote ng-repeat="review in product.reviews">
+                                <b>Stars: {{review.stars}}</b>
+                                {{review.body}}
+                                <cite>by: {{review.author}}</cite>
+                            </blockquote>
+                            <form name="reviewForm" class="form form-group" ng-controller="ReviewController as reviewCtrl">
+                                <legend>Preview:</legend>
+                                <blockquote>
+                                    <b>Stars: {{review.stars}}</b><br/>
+                                    {{review.body}}<br/>
+                                    <cite>by: {{review.author}}</cite>
+                                </blockquote>
+                                <select class="form-control" ng-model="review.stars">
+                                    <option value="1">1 STAR</option>
+                                    <option value="2">2 STAR</option>
+                                    <option value="3">3 STAR</option>
+                                    <option value="4">4 STAR</option>
+                                    <option value="5">5 STAR</option>
+                                </select>
+                                <textarea class="form-control" ng-model="review.body"></textarea>
+                                <label>by:</label>
+                                <input ng-model="review.author" type="email" class="form-control" />
+                                <input type="submit" class="form-control" value="Submit" />
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="angularjs/angular.min.js"></script>
+        <script type="text/javascript" src="app/app.js"></script>
+    </body>
+</html>
